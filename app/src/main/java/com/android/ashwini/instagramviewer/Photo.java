@@ -40,7 +40,9 @@ public class Photo implements Serializable {
         try {
             String id = imageObject.getString("id");
             String caption = "";
-            caption = imageObject.getJSONObject("caption").getString("text");
+            if (imageObject.get("caption").getClass() == org.json.JSONObject.class) {
+                caption = imageObject.getJSONObject("caption").getString("text");
+            }
             String username = imageObject.getJSONObject("user").getString("username");
             String timestamp = imageObject.getString("created_time");
             int numberOfLikes = imageObject.getJSONObject("likes").getInt("count");
