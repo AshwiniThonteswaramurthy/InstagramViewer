@@ -26,10 +26,22 @@ public class InstagramPhotoAdapter extends ArrayAdapter<Photo> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.instagram_complex_row, parent, false);
         }
         ImageView ivUserProfilePic = (ImageView) convertView.findViewById(R.id.ivUserProfilePic);
-        Picasso.with(getContext()).load(photo.getUserProfileImageUrl().toString()).into(ivUserProfilePic);
+        Picasso.with(getContext())
+                .load(photo.getUserProfileImageUrl().toString())
+                .transform(new ProfilePicImageHelper())
+                .into(ivUserProfilePic);
 
         TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
         tvUserName.setText(photo.getUsername());
+
+        ImageView ivPopularMedia = (ImageView) convertView.findViewById(R.id.ivPopularMedia);
+        Picasso.with(getContext())
+                .load(photo.getImageUrl().toString())
+                .into(ivPopularMedia);
+
+        TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
+        tvCaption.setText(photo.getCaption());
+
         return convertView;
     }
 }
