@@ -1,10 +1,14 @@
 package com.android.ashwini.instagramviewer;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -21,6 +25,7 @@ public class PhotoViewerActivity extends ActionBarActivity {
     private ListView lvInstagramPhotos;
     private InstagramClient client;
     private InstagramPhotoAdapter instagramPhotoAdapter;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,25 @@ public class PhotoViewerActivity extends ActionBarActivity {
         lvInstagramPhotos = (ListView) findViewById(R.id.lvInstagramPhotos);
         instagramPhotoAdapter = new InstagramPhotoAdapter(this, photoFeed);
         lvInstagramPhotos.setAdapter(instagramPhotoAdapter);
-        getPopularPhotos();
+        fetchTimelineAsync();
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
     @Override
@@ -56,20 +79,31 @@ public class PhotoViewerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getPopularPhotos() {
+    private void fetchTimelineAsync() {
         client = new InstagramClient();
         client.getInstagramPhotoViewer(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
+                    instagramPhotoAdapter.clear();
                     instagramPhotoAdapter.addAll(Photo.processAllImages(response.getJSONArray("data")));
+                    swipeContainer.setRefreshing(false);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-
     }
 
+
+    public void showAllComments(View view) {
+        Toast.makeText(this, "Showing all comments", Toast.LENGTH_LONG).show();
+        FragmentManager manager = getFragmentManager();
+
+        AllCommentsDialog dialog = new AllCommentsDialog();
+        dialog.show(manager, "dialog");
+
+
+    }
 }
