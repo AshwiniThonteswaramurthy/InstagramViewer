@@ -1,14 +1,11 @@
 package com.android.ashwini.instagramviewer;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -31,7 +28,8 @@ public class PhotoViewerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_viewer);
-        //Get Data
+
+        
         photoFeed = new ArrayList<>();
         lvInstagramPhotos = (ListView) findViewById(R.id.lvInstagramPhotos);
         instagramPhotoAdapter = new InstagramPhotoAdapter(this, photoFeed);
@@ -43,9 +41,6 @@ public class PhotoViewerActivity extends ActionBarActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 fetchTimelineAsync();
             }
         });
@@ -82,6 +77,7 @@ public class PhotoViewerActivity extends ActionBarActivity {
     private void fetchTimelineAsync() {
         client = new InstagramClient();
         client.getInstagramPhotoViewer(new JsonHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -94,16 +90,5 @@ public class PhotoViewerActivity extends ActionBarActivity {
                 }
             }
         });
-    }
-
-
-    public void showAllComments(View view) {
-        Toast.makeText(this, "Showing all comments", Toast.LENGTH_LONG).show();
-        FragmentManager manager = getFragmentManager();
-
-        AllCommentsDialog dialog = new AllCommentsDialog();
-        dialog.show(manager, "dialog");
-
-
     }
 }
