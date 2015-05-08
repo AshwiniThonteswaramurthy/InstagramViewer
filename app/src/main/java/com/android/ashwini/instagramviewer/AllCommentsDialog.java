@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class AllCommentsDialog extends DialogFragment implements AdapterView.OnI
 
     private ListView lvAllComments;
     private ArrayList comments = new ArrayList();
-    private ArrayAdapter<String> adapter;
+    private AllCommentsAdapter adapter;
 
     @Nullable
     @Override
@@ -33,7 +32,7 @@ public class AllCommentsDialog extends DialogFragment implements AdapterView.OnI
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, comments);
+        adapter = new AllCommentsAdapter(getActivity(), R.layout.comment_row, comments);
         lvAllComments.setAdapter(adapter);
         lvAllComments.setOnItemClickListener(this);
     }

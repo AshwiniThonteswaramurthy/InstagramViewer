@@ -20,12 +20,12 @@ public class Photo implements Serializable {
     private URL imageUrl;
     private int imageHeight;
     private int imageWidth;
-    private ArrayList<String> comments;
-    private ArrayList<String> first2Comments;
+    private ArrayList<Comment> comments;
+    private ArrayList<Comment> first2Comments;
 
     public Photo(String id, String caption, String username, String timestamp,
                  int numberOfLikes, int numberOfComments, URL userProfileImageUrl,
-                 URL imageUrl, ArrayList<String> comments, ArrayList<String> first2Comments,
+                 URL imageUrl, ArrayList<Comment> comments, ArrayList<Comment> first2Comments,
                  int imageHeight, int imageWidth) {
         this.id = id;
         this.caption = caption;
@@ -45,30 +45,31 @@ public class Photo implements Serializable {
     public static Photo fromJson(JSONObject imageObject) {
         Photo photo = null;
         try {
-            String id = imageObject.getString("id");
+            String id = imageObject.optString("id");
             String caption = "";
             if (imageObject.get("caption").getClass() == org.json.JSONObject.class) {
-                caption = imageObject.getJSONObject("caption").getString("text");
+                caption = imageObject.optJSONObject("caption").optString("text");
             }
-            String username = imageObject.getJSONObject("user").getString("username");
-            String timestamp = imageObject.getString("created_time");
-            int numberOfLikes = imageObject.getJSONObject("likes").getInt("count");
-            int numberOfComments = imageObject.getJSONObject("comments").getInt("count");
-            URL userProfileImageUrl = new URL(imageObject.getJSONObject("user").getString("profile_picture"));
-            URL imageUrl = new URL(imageObject.getJSONObject("images").getJSONObject("standard_resolution").getString("url"));
-            int imageHeight = imageObject.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
-            int imageWidth = imageObject.getJSONObject("images").getJSONObject("standard_resolution").getInt("width");
-            ArrayList<String> comments = new ArrayList<>();
-            JSONArray commentsData = imageObject.getJSONObject("comments").getJSONArray("data");
-            ArrayList<String> first2comments = new ArrayList<>();
+            String username = imageObject.optJSONObject("user").optString("username");
+            String timestamp = imageObject.optString("created_time");
+            int numberOfLikes = imageObject.optJSONObject("likes").optInt("count");
+            int numberOfComments = imageObject.optJSONObject("comments").optInt("count");
+            URL userProfileImageUrl = new URL(imageObject.optJSONObject("user").optString("profile_picture"));
+            URL imageUrl = new URL(imageObject.optJSONObject("images").optJSONObject("standard_resolution").optString("url"));
+            int imageHeight = imageObject.optJSONObject("images").optJSONObject("standard_resolution").optInt("height");
+            int imageWidth = imageObject.optJSONObject("images").optJSONObject("standard_resolution").optInt("width");
+            ArrayList<Comment> comments = new ArrayList<>();
+            JSONArray commentsData = imageObject.optJSONObject("comments").optJSONArray("data");
+            ArrayList<Comment> first2comments = new ArrayList<>();
             for (int i = 0; i < commentsData.length(); i++) {
                 if (first2comments.size() < 2) {
-                    first2comments.add(commentPattern(commentsData.getJSONObject(i)));
+                    first2comments.add(commentPattern(commentsData.optJSONObject(i)));
                 }
-                comments.add(commentPattern(commentsData.getJSONObject(i)));
+                comments.add(commentPattern(commentsData.optJSONObject(i)));
             }
             photo = new Photo(id, caption, username, timestamp, numberOfLikes, numberOfComments,
                     userProfileImageUrl, imageUrl, comments, first2comments, imageHeight, imageWidth);
+
         } catch (JSONException | MalformedURLException jsonException) {
             jsonException.printStackTrace();
         }
@@ -79,11 +80,7 @@ public class Photo implements Serializable {
     public static ArrayList<Photo> processAllImages(JSONArray imagesArray) {
         ArrayList<Photo> images = new ArrayList<>();
         for (int i = 0; i < imagesArray.length(); i++) {
-            try {
-                images.add(Photo.fromJson(imagesArray.getJSONObject(i)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            images.add(Photo.fromJson(imagesArray.optJSONObject(i)));
         }
         return images;
     }
@@ -109,7 +106,7 @@ public class Photo implements Serializable {
         return imageUrl;
     }
 
-    public ArrayList<String> getComments() {
+    public ArrayList<Comment> getComments() {
         return comments;
     }
 
@@ -125,7 +122,7 @@ public class Photo implements Serializable {
         return numberOfComments;
     }
 
-    public ArrayList<String> getFirst2Comments() {
+    public ArrayList<Comment> getFirst2Comments() {
         return first2Comments;
     }
 
@@ -137,15 +134,10 @@ public class Photo implements Serializable {
         return imageWidth;
     }
 
-    private static String commentPattern(JSONObject commentObject) {
-        String comment = null;
-        try {
-            comment = commentObject.getJSONObject("from").getString("username") + " : " + commentObject.getString("text");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return comment;
-
+    private static Comment commentPattern(JSONObject commentObject) {
+        String username = commentObject.optJSONObject("from").optString("username");
+        String commentText = commentObject.optString("text");
+        return new Comment(username, commentText);
     }
 
 

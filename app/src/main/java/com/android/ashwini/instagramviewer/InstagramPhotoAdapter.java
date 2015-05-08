@@ -1,6 +1,7 @@
 package com.android.ashwini.instagramviewer;
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -19,10 +20,16 @@ import java.util.List;
 
 public class InstagramPhotoAdapter extends ArrayAdapter<Photo> {
 
+    private FragmentManager manager;
+
     public InstagramPhotoAdapter(Context context, List<Photo> objects) {
         super(context, R.layout.instagram_complex_row, objects);
     }
 
+    public InstagramPhotoAdapter(Context context, List<Photo> objects, FragmentManager manager) {
+        super(context, R.layout.instagram_complex_row, objects);
+        this.manager = manager;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -73,29 +80,29 @@ public class InstagramPhotoAdapter extends ArrayAdapter<Photo> {
             @Override
             public void onClick(View v) {
                 Bundle data = new Bundle();
-                data.putStringArrayList("comments", photo.getComments());
+                data.putParcelableArrayList("comments", photo.getComments());
                 DialogFragment dialog = new AllCommentsDialog();
                 dialog.setArguments(data);
-                dialog.show(dialog.getFragmentManager(), "dialog");
+                dialog.show(manager, "dialog");
             }
         });
 
         //API returns the comments in sorted order the method puts those into a different arraylist.
-        ArrayList<String> first2Comments = photo.getFirst2Comments();
+        ArrayList<Comment> first2Comments = photo.getFirst2Comments();
 
         //First latest comment
         if (first2Comments.size() >= 1) {
             TextView tvFirstComment = (TextView) convertView.findViewById(R.id.tvFirstComment);
             TextView tvFirstCommentUserName = (TextView) convertView.findViewById(R.id.tvFirstCommentUserName);
-            tvFirstCommentUserName.setText(first2Comments.get(0).split(":")[0]);
-            tvFirstComment.setText(first2Comments.get(0).split(":")[1]);
+            tvFirstCommentUserName.setText(first2Comments.get(0).getUsername());
+            tvFirstComment.setText(first2Comments.get(0).getComment());
         }
         // Second latest comment
         if (first2Comments.size() == 2) {
             TextView tvSecondComment = (TextView) convertView.findViewById(R.id.tvSecondComment);
             TextView tvSecondCommentUserName = (TextView) convertView.findViewById(R.id.tvSecondCommentUserName);
-            tvSecondCommentUserName.setText(first2Comments.get(1).split(":")[0]);
-            tvSecondComment.setText(first2Comments.get(1).split(":")[1]);
+            tvSecondCommentUserName.setText(first2Comments.get(1).getUsername());
+            tvSecondComment.setText(first2Comments.get(1).getComment());
         }
         return convertView;
     }

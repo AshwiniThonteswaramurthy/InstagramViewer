@@ -10,7 +10,6 @@ import android.widget.ListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -29,10 +28,10 @@ public class PhotoViewerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_viewer);
 
-        
+
         photoFeed = new ArrayList<>();
         lvInstagramPhotos = (ListView) findViewById(R.id.lvInstagramPhotos);
-        instagramPhotoAdapter = new InstagramPhotoAdapter(this, photoFeed);
+        instagramPhotoAdapter = new InstagramPhotoAdapter(this, photoFeed, getFragmentManager());
         lvInstagramPhotos.setAdapter(instagramPhotoAdapter);
         fetchTimelineAsync();
 
@@ -80,14 +79,9 @@ public class PhotoViewerActivity extends ActionBarActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    instagramPhotoAdapter.clear();
-                    instagramPhotoAdapter.addAll(Photo.processAllImages(response.getJSONArray("data")));
-                    swipeContainer.setRefreshing(false);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                instagramPhotoAdapter.clear();
+                instagramPhotoAdapter.addAll(Photo.processAllImages(response.optJSONArray("data")));
+                swipeContainer.setRefreshing(false);
             }
         });
     }
