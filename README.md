@@ -1,6 +1,6 @@
 # Project : Instagram Viewer
 
-#### Description : Build a read-only photo viewer for Instagram which allows a user to check out popular photos using [Instagram API!](https://instagram.com/developer/endpoints/media/).
+#### Description : Build a read-only photo viewer for Instagram which allows a user to check out popular photos using [Instagram API](https://instagram.com/developer/endpoints/media/).
 =================
 
 Time spent: 9 hours spent in total
