@@ -1,6 +1,6 @@
 # Project : Instagram Viewer
 
-## Description : Build a read-only photo viewer for Instagram which allows a user to check out popular photos.
+#### Description : Build a read-only photo viewer for Instagram which allows a user to check out popular photos.
 =================
 
 Time spent: 9 hours spent in total
@@ -19,7 +19,7 @@ The following user stories must be completed:
  * [x] Optional : Improve the user interface through styling and coloring
  * [x] Optional : Allow user to view all comments for an image within a separate dialog fragment
  
-### Demo 
+#### Demo 
 ----
 ![Video Walkthrough](InstagramViewerDemo.gif)
 
