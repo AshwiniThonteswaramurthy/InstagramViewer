@@ -92,6 +92,13 @@ public class InstagramPhotoAdapter extends ArrayAdapter<Photo> {
 
         //First latest comment
         if (first2Comments.size() >= 1) {
+
+            ImageView ivFirstCommentUserProfilePic = (ImageView) convertView.findViewById(R.id.ivFirstCommentUserProfilePic);
+            Picasso.with(getContext())
+                    .load(first2Comments.get(0).getProfilePicUrl())
+                    .transform(new RoundedTransformationBuilder().cornerRadiusDp(50).build())
+                    .into(ivFirstCommentUserProfilePic);
+
             TextView tvFirstComment = (TextView) convertView.findViewById(R.id.tvFirstComment);
             TextView tvFirstCommentUserName = (TextView) convertView.findViewById(R.id.tvFirstCommentUserName);
             tvFirstCommentUserName.setText(first2Comments.get(0).getUsername());
@@ -99,6 +106,12 @@ public class InstagramPhotoAdapter extends ArrayAdapter<Photo> {
         }
         // Second latest comment
         if (first2Comments.size() == 2) {
+            ImageView ivSecondCommentUserProfilePic = (ImageView) convertView.findViewById(R.id.ivSecondCommentUserProfilePic);
+            Picasso.with(getContext())
+                    .load(first2Comments.get(1).getProfilePicUrl())
+                    .transform(new RoundedTransformationBuilder().cornerRadiusDp(50).build())
+                    .into(ivSecondCommentUserProfilePic);
+
             TextView tvSecondComment = (TextView) convertView.findViewById(R.id.tvSecondComment);
             TextView tvSecondCommentUserName = (TextView) convertView.findViewById(R.id.tvSecondCommentUserName);
             tvSecondCommentUserName.setText(first2Comments.get(1).getUsername());

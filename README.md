@@ -18,9 +18,10 @@ The following user stories must be completed:
  * [x] Optional : Display each user profile image using a RoundedImageView
  * [x] Optional : Improve the user interface through styling and coloring
  * [x] Optional : Allow user to view all comments for an image within a separate dialog fragment
+ * [x] Optional : Display comment users profile pic and relative time since the comment was made. 
  
 #### Demo 
 ----
-![Video Walkthrough](InstagramViewerDemo.gif)
+![Video Walkthrough](InstagramViewerDemo2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).

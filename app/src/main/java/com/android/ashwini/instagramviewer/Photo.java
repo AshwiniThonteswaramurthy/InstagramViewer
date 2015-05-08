@@ -137,7 +137,9 @@ public class Photo implements Serializable {
     private static Comment commentPattern(JSONObject commentObject) {
         String username = commentObject.optJSONObject("from").optString("username");
         String commentText = commentObject.optString("text");
-        return new Comment(username, commentText);
+        String commentUserProfilePicUrl = commentObject.optJSONObject("from").optString("profile_picture");
+        String commentedTime = commentObject.optString("created_time");
+        return new Comment(username, commentText, commentUserProfilePicUrl, commentedTime);
     }
 
 
